@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 #'''
 # Created on 18-12-27 上午10:34
 #
@@ -17,18 +17,18 @@ from ctpn_utils import cal_rpn
 
 def readxml(path):
     gtboxes = []
-    imgfile = ''
+    imgfile = ""
     xml = ET.parse(path)
     for elem in xml.iter():
-        if 'filename' in elem.tag:
+        if "filename" in elem.tag:
             imgfile = elem.text
-        if 'object' in elem.tag:
+        if "object" in elem.tag:
             for attr in list(elem):
-                if 'bndbox' in attr.tag:
-                    xmin = int(round(float(attr.find('xmin').text)))
-                    ymin = int(round(float(attr.find('ymin').text)))
-                    xmax = int(round(float(attr.find('xmax').text)))
-                    ymax = int(round(float(attr.find('ymax').text)))
+                if "bndbox" in attr.tag:
+                    xmin = int(round(float(attr.find("xmin").text)))
+                    ymin = int(round(float(attr.find("ymin").text)))
+                    xmax = int(round(float(attr.find("xmax").text)))
+                    ymax = int(round(float(attr.find("ymax").text)))
 
                     gtboxes.append((xmin, ymin, xmax, ymax))
 
@@ -37,19 +37,17 @@ def readxml(path):
 
 # for ctpn text detection
 class VOCDataset(Dataset):
-    def __init__(self,
-                 datadir,
-                 labelsdir):
-        '''
+    def __init__(self, datadir, labelsdir):
+        """
 
         :param txtfile: image name list text file
         :param datadir: image's directory
         :param labelsdir: annotations' directory
-        '''
+        """
         if not os.path.isdir(datadir):
-            raise Exception('[ERROR] {} is not a directory'.format(datadir))
+            raise Exception("[ERROR] {} is not a directory".format(datadir))
         if not os.path.isdir(labelsdir):
-            raise Exception('[ERROR] {} is not a directory'.format(labelsdir))
+            raise Exception("[ERROR] {} is not a directory".format(labelsdir))
 
         self.datadir = datadir
         self.img_names = os.listdir(self.datadir)
@@ -62,7 +60,7 @@ class VOCDataset(Dataset):
         img_name = self.img_names[idx]
         img_path = os.path.join(self.datadir, img_name)
         print(img_path)
-        xml_path = os.path.join(self.labelsdir, img_name.replace('.jpg', '.xml'))
+        xml_path = os.path.join(self.labelsdir, img_name.replace(".jpg", ".xml"))
         gtbox, _ = readxml(xml_path)
         img = cv2.imread(img_path)
         h, w, c = img.shape
@@ -88,4 +86,3 @@ class VOCDataset(Dataset):
         regr = torch.from_numpy(regr).float()
 
         return m_img, cls, regr
-
