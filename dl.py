@@ -22,7 +22,7 @@ class DeepLakeDataset(Dataset):
         return self.dataset.__len__()
 
     def __getitem__(self, idx):
-        img = self.dataset["image"][idx].numpy()
+        img = self.dataset["images"][idx].numpy()
         # gtboxes: [[xmin, ymin, xmax, ymax], ...]
         gtboxes = self.dataset["boxes/box"][idx].data()
 
