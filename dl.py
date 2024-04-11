@@ -22,8 +22,16 @@ class DeepLakeDataset(Dataset):
         return self.dataset.__len__()
 
     def __getitem__(self, idx):
-        img = self.dataset["images"][idx]
-        gtbox = self.dataset["boxes/box"][idx].data()
+        img = self.dataset["image"][idx].numpy()
+        # gtboxes: [[xmin, ymin, xmax, ymax], ...]
+        gtboxes = self.dataset["boxes/box"][idx].data()
+
+        # convert to numpy array
+        # gtbox: [(xmin, ymin, xmax, ymax), ...]
+        gtbox_list = []
+        for box in gtboxes["value"]:
+            gtbox_list.append((box[0], box[1], box[2], box[3]))
+        gtbox = np.array(gtbox_list)
 
         # fuzhi zhantie de code
         h, w, c = img.shape

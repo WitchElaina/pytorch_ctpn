@@ -33,8 +33,13 @@ pre_weights = os.path.join(config.checkpoints_dir, "ctpn_keras_weights.pth.tar")
 def get_arguments():
     parser = argparse.ArgumentParser(description="Pytorch CTPN For TexT Detection")
     parser.add_argument("--num-workers", type=int, default=num_workers)
-    parser.add_argument("--image-dir", type=str, default=config.img_dir)
-    parser.add_argument("--labels-dir", type=str, default=config.xml_dir)
+    # parser.add_argument("--image-dir", type=str, default=config.img_dir)
+    # parser.add_argument("--labels-dir", type=str, default=config.xml_dir)
+    parser.add_argument(
+        "--deeplake-url",
+        type=str,
+        default="hub://activeloop/icdar-2013-text-localize-train",
+    )
     parser.add_argument("--pretrained-weights", type=str, default=pre_weights)
     return parser.parse_args()
 
@@ -58,7 +63,7 @@ if __name__ == "__main__":
         pretrained = False
 
     # dataset = VOCDataset(args['image_dir'], args['labels_dir'])
-    dataset = DeepLakeDataset("hub://activeloop/icdar-2013-text-localize-train")
+    dataset = DeepLakeDataset(args["deeplake_url"])
 
     dataloader = DataLoader(
         dataset, batch_size=1, shuffle=True, num_workers=args["num_workers"]

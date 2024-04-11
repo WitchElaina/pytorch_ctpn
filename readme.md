@@ -14,7 +14,9 @@ Training log is available:[Training Log](./logs/training_logs.pdf)(Chinese)
 ### train
 - ~~download ctpn model weights (converted from keras ctpn weights) `ctpn_keras_weights.pth.tar` from [dropbox](https://www.dropbox.com/s/81zfc50x6g6fauz/ctpn_keras_weights.pth.tar?dl=0), and move it to **./checkpoints/**~~ (*For a number of reasons, the pretrained weights will no longer be available.Thanks for your attention.*)
 - ~~download [VOC2007_text_detection Chinese Text Detection dataset](http://not_available_any_more_due_to_lack_of_space) and move it to **./images/**~~
-- run `python ctpn_train.py --image-dir image_dir --labels-dir labels_dir --num-workers num_workers`
+- ~~run `python ctpn_train.py --image-dir image_dir --labels-dir labels_dir --num-workers num_workers`~~
+- 不给数据集是吧, 我直接用 deeplake 魔改, 如何呢 🐱
+- run `python ctpn_train.py --num-workers [num_workers] --deeplake-url [hub://xxx]`
 
 ### predict
 - ~~download the pretrained weights from [dropbox](https://www.dropbox.com/s/r1zjw167a5lsk4l/ctpn_ep18_0.0074_0.0121_0.0195%28w-lstm%29.pth.tar?dl=0)~~
