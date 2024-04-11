@@ -54,6 +54,21 @@ def save_checkpoint(state, epoch, loss_cls, loss_regr, loss, ext="pth.tar"):
     print("saving to {}".format(check_path))
 
 
+def load_checkpoint(checkpoint_path, model):
+    """
+    加载 PyTorch 模型的检查点
+
+    参数：
+        checkpoint_path：检查点文件的路径
+        model：要加载检查点的模型
+
+    返回：
+        加载了检查点参数的模型
+    """
+    checkpoint = torch.load(checkpoint_path)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    return model
+
 args = vars(get_arguments())
 
 if __name__ == "__main__":
@@ -94,6 +109,28 @@ if __name__ == "__main__":
         print(f"Epoch {epoch}/{epochs}")
         print("#" * 50)
         epoch_size = len(dataset) // 1
+
+        # 在每个 epoch 开始之前加载该 epoch 的 checkpoint 文件
+        checkpoint_dir = config.checkpoints_dir
+        checkpoint_files = []
+
+        # 遍历检查点目录
+        for filename in os.listdir(checkpoint_dir):
+            # 检查文件名是否匹配指定的模式
+            if filename.startswith(f"ctpn_ep{epoch:02d}_") and filename.endswith(".pth.tar"):
+                checkpoint_files.append(os.path.join(checkpoint_dir, filename))
+
+        # 选择最新的文件作为检查点
+        if checkpoint_files:
+            checkpoint_path = max(checkpoint_files, key=os.path.getctime)
+
+            print("Loading checkpoint from:", checkpoint_path)
+            model = load_checkpoint(checkpoint_path, model)
+            continue;
+        else:
+            print("No checkpoint found for this epoch. Start train...")
+            
+
         model.train()
         epoch_loss_cls = 0
         epoch_loss_regr = 0
